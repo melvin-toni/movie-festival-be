@@ -106,3 +106,29 @@ exports.readPopularGenre = async () => {
     const data = await con.all(query);
     return data;
 }
+
+exports.readOneMovie = async (prm) => {
+    const con = await db();
+    const data = await con.get('SELECT * FROM movies WHERE id = ?', prm.id);
+    return data;
+}
+
+exports.readOneGenre = async (prm) => {
+    const con = await db();
+    const data = await con.get('SELECT * FROM genres WHERE name = ?', prm.genres);
+    return data;
+}
+
+exports.trackViewership = async (prm) => {
+    const con = await db();
+    
+    let data = await con.run('UPDATE movies SET viewed=? WHERE id = ?',
+        prm.movie_viewed,
+        prm.id);
+
+    data = await con.run('UPDATE genres SET viewed=? WHERE name = ?',
+        prm.genre_viewed,
+        prm.genre_name);
+
+    return data;
+}

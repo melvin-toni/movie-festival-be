@@ -19,5 +19,6 @@ router.post('/', /*validator.create,*/upload, controller.create);
 router.post('/search', controller.search);
 
 router.patch('/:id', upload, controller.update);
+router.patch('/:id/track-viewership', controller.trackViewership);
 
 module.exports = router;

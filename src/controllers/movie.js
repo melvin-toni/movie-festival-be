@@ -176,3 +176,47 @@ exports.search = async (req, res) => {
         });
     }
 }
+
+exports.trackViewership = async (req, res) => {
+    traceLog(`${TAG} >> trackViewership`);
+
+    try {
+        let prmUpdate = {
+            id: req.params.id
+        }
+
+        const fetchedMovie = await db.readOneMovie(prmUpdate);
+        const fetchedGenre = await db.readOneGenre(fetchedMovie);
+        if (fetchedMovie) {
+            prmUpdate['movie_viewed'] = parseInt(fetchedMovie.viewed) + 1;
+            prmUpdate['genre_viewed'] = parseInt(fetchedGenre.viewed) + 1;
+            prmUpdate['genre_name'] = fetchedMovie.genres;
+            const data = await db.trackViewership(prmUpdate);
+
+            if (data.changes === 1) {
+                successLog(req, res, {
+                    status: true,
+                    message: 'Viewership update success'
+                });
+            } else {
+                failedLog(req, res, {
+                    status: false,
+                    message: 'Viewership update failed',
+                    debug: 'Data not updated'
+                });
+            }
+        } else {
+            failedLog(req, res, {
+                status: false,
+                message: 'Data not found',
+                debug: 'Data not found'
+            });
+        }
+    } catch (error) {
+        failedLog(req, res, {
+            status: false,
+            message: 'Track viewership failed',
+            debug: error
+        });
+    }
+}
