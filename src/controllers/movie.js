@@ -9,10 +9,16 @@ const {
 exports.readAll = async (req, res) => {
     traceLog(`${TAG} >> readAll`);
 
+    const _limit = parseInt(req.query.limit) ? parseInt(req.query.limit) * 1 : 5;
+    const _offset = parseInt(req.query.index) ? parseInt(req.query.index) * _limit : 0;
+
     try {
-        let prm = {};
+        let prm = {
+            limit: _limit,
+            offset: _offset
+        };
         let msg = 'Data is empty';
-        
+
         if (req.query.sorted_by) {
             prm['sortedBy'] = req.query.sorted_by;
         }
@@ -25,7 +31,10 @@ exports.readAll = async (req, res) => {
         successLog(req, res, {
             status: true,
             message: msg,
-            result: data
+            result: {
+                page: (req.query.index ? parseInt(req.query.index) + 1 : 1),
+                data: data
+            }
         });
     } catch (error) {
         failedLog(req, res, {
