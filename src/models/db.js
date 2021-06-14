@@ -1,5 +1,6 @@
 const sqlite3 = require("sqlite3");
 const { open } = require("sqlite");
+const { nanoid } = require("nanoid");
 
 const db = async () => {
     return await open({
@@ -8,19 +9,23 @@ const db = async () => {
     });
 };
 
-// const init = async () => {
-//     const con = await db();
-//     await con.exec('DROP TABLE IF EXISTS booking_data');
-//     await con.exec(
-//         'CREATE TABLE booking_data(flight_no TEXT, adult INTEGER, child INTEGER, infant INTEGER)'
-//     );
-//     await con.exec('INSERT INTO booking_data VALUES("AF 123", 2, 0, 1)');
-//     await con.exec('INSERT INTO booking_data VALUES("BE 782", 2, 1, 1)');
-// };
-
-// const getAll = async (flightNo) => {
-exports.getAll = async (flightNo) => {
+exports.init = async () => {
     const con = await db();
-    const data = await con.all('SELECT * FROM booking_data WHERE flight_no = ?', flightNo);
+    await con.exec('DROP TABLE IF EXISTS movies');
+    await con.exec(
+        'CREATE TABLE movies(id TEXT, title TEXT, description TEXT, duration INTEGER, artists TEXT, genres TEXT, url TEXT)'
+    );
+}
+
+exports.createMovie = async (prm) => {
+    const con = await db();
+    const data = await con.run('INSERT INTO movies (id, title, description, duration, artists, genres, url) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        nanoid(process.env.ID_LENGTH),
+        prm.title,
+        prm.description,
+        prm.duration,
+        prm.artists,
+        prm.genres,
+        prm.url);
     return data;
 }

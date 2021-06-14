@@ -7,7 +7,7 @@ const sqlite3 = require('sqlite3');
 const path = require('path');
 
 // add the list of routes here
-const userRoutes = require('./routes/user');
+const movieRoutes = require('./routes/movie');
 
 const envPath = 'environments/.env.development'
 env.config({
@@ -32,7 +32,7 @@ app.use(bodyParser.json());
 app.use(expressValidator());
 
 // add the list of API's here
-app.use('/api/user', userRoutes);
+app.use('/api/movie', movieRoutes);
 
 app.listen(app.get('port'), () => {
     console.log('%s App is running at %s:%d in %s mode', chalk.green('✓'), app.get('host'), app.get('port'), app.get('env'));
