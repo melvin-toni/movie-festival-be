@@ -13,6 +13,7 @@ const upload = multer({ storage: storage }).single('url');
 // const validator = require('../validators/user');
 
 router.get('/', controller.readAll);
+router.get('/most-viewed-genre', controller.readPopularGenre);
 
 router.post('/', /*validator.create,*/upload, controller.create);
 

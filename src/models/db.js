@@ -12,9 +12,16 @@ const db = async () => {
 exports.init = async () => {
     const con = await db();
     await con.exec('DROP TABLE IF EXISTS movies');
+    await con.exec('DROP TABLE IF EXISTS genres');
+    // MOVIES
     await con.exec(
         'CREATE TABLE movies(id TEXT, title TEXT, description TEXT, duration INTEGER, artists TEXT, genres TEXT, url TEXT, viewed INTEGER)'
     );
+    // GENRES
+    await con.exec('CREATE TABLE genres(name TEXT, viewed INTEGER)');
+    await con.exec('INSERT INTO genres VALUES("action", 52)');
+    await con.exec('INSERT INTO genres VALUES("comedy", 89)');
+    await con.exec('INSERT INTO genres VALUES("romance", 78)');
 }
 
 exports.createMovie = async (prm) => {
@@ -51,6 +58,15 @@ exports.readAllMovie = async (prm) => {
 
     if (prm.sortedBy === 'most_viewed')
         query = query.concat(' ORDER BY viewed DESC');
+        
+    const data = await con.all(query);
+    return data;
+}
+
+exports.readPopularGenre = async () => {
+    const con = await db();
+
+    let query = 'SELECT * FROM genres ORDER BY viewed DESC';
         
     const data = await con.all(query);
     return data;

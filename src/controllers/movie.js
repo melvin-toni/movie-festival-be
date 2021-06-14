@@ -36,6 +36,31 @@ exports.readAll = async (req, res) => {
     }
 }
 
+exports.readPopularGenre = async (req, res) => {
+    traceLog(`${TAG} >> readPopularGenre`);
+
+    try {
+        let msg = 'Data is empty';
+
+        const data = await db.readPopularGenre();
+
+        if (data.length > 0)
+            msg = 'Genre read success';
+
+        successLog(req, res, {
+            status: true,
+            message: msg,
+            result: data
+        });
+    } catch (error) {
+        failedLog(req, res, {
+            status: false,
+            message: 'Genre read failed',
+            debug: error
+        });
+    }
+}
+
 exports.create = async (req, res) => {
     traceLog(`${TAG} >> create`);
 
