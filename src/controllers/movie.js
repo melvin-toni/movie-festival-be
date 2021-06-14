@@ -40,3 +40,40 @@ exports.create = async (req, res) => {
         });
     }
 }
+
+exports.update = async (req, res) => {
+    traceLog(`${TAG} >> update`);
+
+    try {
+        const prmUpdate = {
+            id: req.params.id,
+            title: req.body.title,
+            description: req.body.description,
+            duration: req.body.duration,
+            artists: req.body.artists,
+            genres: req.body.genres,
+            url: req.file.path,
+        }
+
+        const data = await db.updateMovie(prmUpdate);
+        console.log('DATA >>', data);
+        if (data.changes === 1) {
+            successLog(req, res, {
+                status: true,
+                message: 'Movie update success'
+            });
+        } else {
+            failedLog(req, res, {
+                status: false,
+                message: 'Movie update failed',
+                debug: 'Data not updated'
+            });
+        }
+    } catch (error) {
+        failedLog(req, res, {
+            status: false,
+            message: 'Movie update failed',
+            debug: error
+        });
+    }
+}

@@ -29,3 +29,16 @@ exports.createMovie = async (prm) => {
         prm.url);
     return data;
 }
+
+exports.updateMovie = async (prm) => {
+    const con = await db();
+    const data = await con.run('UPDATE movies SET title=?, description=?, duration=?, artists=?, genres=?, url=? WHERE id = ?',
+        prm.title,
+        prm.description,
+        prm.duration,
+        prm.artists,
+        prm.genres,
+        prm.url,
+        prm.id);
+    return data;
+}

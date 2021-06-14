@@ -13,5 +13,6 @@ const upload = multer({ storage: storage }).single('url');
 // const validator = require('../validators/user');
 
 router.post('/', /*validator.create,*/upload, controller.create);
+router.patch('/:id', upload, controller.update);
 
 module.exports = router;
