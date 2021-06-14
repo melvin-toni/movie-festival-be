@@ -77,10 +77,22 @@ exports.readAllMovie = async (prm) => {
 
     let query = 'SELECT * FROM movies';
 
+    if (prm.title) {
+        query = query.concat(` WHERE title LIKE "%${prm.title}%"`);
+    } else if (prm.description) {
+        query = query.concat(` WHERE description LIKE "%${prm.description}%"`);
+    } else if (prm.artists) {
+        query = query.concat(` WHERE artists LIKE "%${prm.artists}%"`);
+    } else if (prm.genres) {
+        query = query.concat(` WHERE genres LIKE "%${prm.genres}%"`);
+    }
+
     if (prm.sortedBy === 'most_viewed')
         query = query.concat(' ORDER BY viewed DESC');
 
-    query = query.concat(` LIMIT ${prm.limit} OFFSET ${prm.offset}`);
+    if (prm.limit) {
+        query = query.concat(` LIMIT ${prm.limit} OFFSET ${prm.offset}`);
+    }
 
     const data = await con.all(query);
     return data;

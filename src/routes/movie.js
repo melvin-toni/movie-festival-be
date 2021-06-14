@@ -16,6 +16,7 @@ router.get('/', controller.readAll);
 router.get('/most-viewed-genre', controller.readPopularGenre);
 
 router.post('/', /*validator.create,*/upload, controller.create);
+router.post('/search', controller.search);
 
 router.patch('/:id', upload, controller.update);
 

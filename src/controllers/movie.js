@@ -141,3 +141,38 @@ exports.update = async (req, res) => {
         });
     }
 }
+
+exports.search = async (req, res) => {
+    traceLog(`${TAG} >> search`);
+
+    try {
+        let prm = {};
+        let msg = 'Data is empty';
+
+        if (req.body.search_by === 'title') {
+            prm['title'] = req.body.keyword;
+        } else if (req.body.search_by === 'description') {
+            prm['description'] = req.body.keyword;
+        } else if (req.body.search_by === 'artists') {
+            prm['artists'] = req.body.keyword;
+        } else if (req.body.search_by === 'genres') {
+            prm['genres'] = req.body.keyword;
+        }
+
+        const data = await db.readAllMovie(prm);
+        if (data.length > 0)
+            msg = 'Movie search success';
+
+        successLog(req, res, {
+            status: true,
+            message: msg,
+            result: data
+        });
+    } catch (error) {
+        failedLog(req, res, {
+            status: false,
+            message: 'Movie search failed',
+            debug: error
+        });
+    }
+}
