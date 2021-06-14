@@ -6,6 +6,36 @@ const {
     failedLog
 } = require("../helpers/logger");
 
+exports.readAll = async (req, res) => {
+    traceLog(`${TAG} >> readAll`);
+
+    try {
+        let prm = {};
+        let msg = 'Data is empty';
+        
+        if (req.query.sorted_by) {
+            prm['sortedBy'] = req.query.sorted_by;
+        }
+
+        const data = await db.readAllMovie(prm);
+
+        if (data.length > 0)
+            msg = 'Movie read success';
+
+        successLog(req, res, {
+            status: true,
+            message: msg,
+            result: data
+        });
+    } catch (error) {
+        failedLog(req, res, {
+            status: false,
+            message: 'Movie read failed',
+            debug: error
+        });
+    }
+}
+
 exports.create = async (req, res) => {
     traceLog(`${TAG} >> create`);
 
@@ -56,7 +86,7 @@ exports.update = async (req, res) => {
         }
 
         const data = await db.updateMovie(prmUpdate);
-        console.log('DATA >>', data);
+
         if (data.changes === 1) {
             successLog(req, res, {
                 status: true,
