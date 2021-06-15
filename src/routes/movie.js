@@ -10,12 +10,11 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage }).single('url');
-// const validator = require('../validators/user');
 
 router.get('/', controller.readAll);
 router.get('/most-viewed-genre', controller.readPopularGenre);
 
-router.post('/', /*validator.create,*/upload, controller.create);
+router.post('/', upload, controller.create);
 router.post('/search', controller.search);
 
 router.patch('/:id', upload, controller.update);

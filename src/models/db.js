@@ -13,6 +13,7 @@ exports.init = async () => {
     const con = await db();
     await con.exec('DROP TABLE IF EXISTS movies');
     await con.exec('DROP TABLE IF EXISTS genres');
+    await con.exec('DROP TABLE IF EXISTS users');
     // MOVIES
     await con.exec(
         'CREATE TABLE movies(id TEXT, title TEXT, description TEXT, duration INTEGER, artists TEXT, genres TEXT, url TEXT, viewed INTEGER)'
@@ -43,6 +44,11 @@ exports.init = async () => {
     await con.exec('INSERT INTO genres VALUES("action", 52)');
     await con.exec('INSERT INTO genres VALUES("comedy", 89)');
     await con.exec('INSERT INTO genres VALUES("romance", 78)');
+    // USERS
+    await con.exec('CREATE TABLE users(email TEXT, password TEXT, role TEXT)');
+    await con.exec('INSERT INTO users VALUES("andy@example.com", "$2b$10$db8MSDtyESc.i7TmLv3aIO7iwYgu1mEU21hZ5enBgM1VWTykP5.5O", "admin")');
+    await con.exec('INSERT INTO users VALUES("bernard@example.com", "$2b$10$db8MSDtyESc.i7TmLv3aIO7iwYgu1mEU21hZ5enBgM1VWTykP5.5O", "common_user")');
+    await con.exec('INSERT INTO users VALUES("charlie@example.com", "$2b$10$db8MSDtyESc.i7TmLv3aIO7iwYgu1mEU21hZ5enBgM1VWTykP5.5O", "common_user")');
 }
 
 exports.createMovie = async (prm) => {
@@ -130,5 +136,11 @@ exports.trackViewership = async (prm) => {
         prm.genre_viewed,
         prm.genre_name);
 
+    return data;
+}
+
+exports.readOneUser = async (prm) => {
+    const con = await db();
+    const data = await con.get('SELECT * FROM users WHERE email = ?', prm.email);
     return data;
 }
